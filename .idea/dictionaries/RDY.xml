@@ -2,6 +2,7 @@
   <dictionary name="RDY">
     <words>
       <w>corsheaders</w>
+      <w>filterset</w>
     </words>
   </dictionary>
 </component>

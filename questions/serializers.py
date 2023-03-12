@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from questions.models import Question, SingleChoice
+from questions.models import SingleChoice
 
 
 class SingleChoiceSerializer(serializers.HyperlinkedModelSerializer):

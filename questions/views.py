@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
-from questions.models import Question, SingleChoice
+from django_filters.rest_framework import DjangoFilterBackend
+
+from questions.models import SingleChoice
 from questions.serializers import SingleChoiceSerializer, UserSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -17,6 +19,8 @@ def index(request):
 class SingleChoiceViewSet(viewsets.ModelViewSet):
     queryset = SingleChoice.objects.all()
     serializer_class = SingleChoiceSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['author', 'body']
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

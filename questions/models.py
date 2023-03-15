@@ -13,7 +13,8 @@ class SingleChoice(models.Model):
     choices_2 = models.CharField(max_length=200)
     choices_3 = models.CharField(max_length=200)
     choices_4 = models.CharField(max_length=200)
-    right_answer = models.IntegerField(default=0)
+    right_answer = models.CharField(max_length=1)
+    subject = models.CharField(max_length=50)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

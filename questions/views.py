@@ -3,8 +3,8 @@ from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django_filters.rest_framework import DjangoFilterBackend
 
-from questions.models import SingleChoice
-from questions.serializers import SingleChoiceSerializer, UserSerializer
+from questions.models import SingleChoice, ChoiceQuestion
+from questions.serializers import SingleChoiceSerializer, UserSerializer, ChoiceQuestionSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, generics, viewsets
@@ -21,6 +21,16 @@ class SingleChoiceViewSet(viewsets.ModelViewSet):
     serializer_class = SingleChoiceSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['author', 'body']
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class ChoiceQuestionViewSet(viewsets.ModelViewSet):
+    queryset = ChoiceQuestion.objects.all()
+    serializer_class = ChoiceQuestionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['author', 'type']
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

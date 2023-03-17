@@ -7,6 +7,7 @@ from questions import views
 
 router = DefaultRouter()
 router.register(r'singleChoice', views.SingleChoiceViewSet)
+router.register(r'choice-question', views.ChoiceQuestionViewSet)
 router.register(r'user', views.UserViewSet)
 
 urlpatterns = [

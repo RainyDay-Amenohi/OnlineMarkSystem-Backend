@@ -6,21 +6,20 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 # 单选题的数据模型
-class SingleChoice(models.Model):
-    body = models.TextField()
-    choices_1 = models.CharField(max_length=200)
-    choices_2 = models.CharField(max_length=200)
-    choices_3 = models.CharField(max_length=200)
-    choices_4 = models.CharField(max_length=200)
-    right_answer = models.CharField(max_length=1)
-    subject = models.CharField(max_length=50)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-
-    def __str__(self):
-        return self.body
-
-    class Meta:
-        ordering = ['-id']
+# class SingleChoice(models.Model):
+#     body = models.TextField()
+#     choices_1 = models.CharField(max_length=200)
+#     choices_2 = models.CharField(max_length=200)
+#     choices_3 = models.CharField(max_length=200)
+#     choices_4 = models.CharField(max_length=200)
+#     right_answer = models.CharField(max_length=1)
+#     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+#
+#     def __str__(self):
+#         return self.body
+#
+#     class Meta:
+#         ordering = ['-id']
 
 
 # 选择题数据模型
@@ -54,5 +53,19 @@ class ChoiceQuestion(models.Model):
 
 # 主观题数据模型
 class SubjectiveQuestion(models.Model):
+    class SubjectStatus(models.IntegerChoices):
+        CHI = 0, '语文',
+        ENG = 1, '英语',
+        MAT = 2, '数学',
+
     body = models.TextField()
     correct_answer = models.TextField()
+    image = models.ImageField(upload_to='img', blank=True, null=True)
+    subject = models.IntegerField(choices=SubjectStatus.choices, null=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    def __str__(self):
+        return self.body
+
+    class Meta:
+        ordering = ['-id']

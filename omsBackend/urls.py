@@ -6,9 +6,10 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from questions import views
 
 router = DefaultRouter()
-router.register(r'singleChoice', views.SingleChoiceViewSet)
+# router.register(r'singleChoice', views.SingleChoiceViewSet)
 router.register(r'choice-question', views.ChoiceQuestionViewSet)
 router.register(r'user', views.UserViewSet)
+router.register(r'subjective-question', views.SubjectiveQuestionViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

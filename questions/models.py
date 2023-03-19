@@ -24,14 +24,25 @@ from django.contrib.auth.models import User
 
 # 选择题数据模型
 class ChoiceQuestion(models.Model):
-    class SubjectStatus(models.IntegerChoices):
-        CHI = 0, '语文',
-        ENG = 1, '英语',
-        MAT = 2, '数学',
+    # class SubjectStatus(models.IntegerChoices):
+    #     CHI = 0, '语文',
+    #     ENG = 1, '英语',
+    #     MAT = 2, '数学',
 
-    class TypeStatus(models.IntegerChoices):
-        SINGLE = 0, '单项选择',
-        MULTIPLE = 1, '多项选择'
+    # class TypeStatus(models.IntegerChoices):
+    #     SINGLE = 0, '单项选择',
+    #     MULTIPLE = 1, '多项选择'
+
+    SUBJECT_STATUS = [
+        (0, '语文'),
+        (1, '英语'),
+        (2, '数学'),
+    ]
+
+    TYPE_STATUS = [
+        (0, '单项选择'),
+        (1, '多项选择'),
+    ]
 
     body = models.TextField()
     choices_A = models.CharField(max_length=200)
@@ -40,8 +51,8 @@ class ChoiceQuestion(models.Model):
     choices_D = models.CharField(max_length=200)
     correct_answer = models.CharField(max_length=10)
     image = models.ImageField(upload_to='img', blank=True, null=True)
-    subject = models.IntegerField(choices=SubjectStatus.choices, null=True)
-    type = models.IntegerField(choices=TypeStatus.choices)
+    subject = models.IntegerField(choices=SUBJECT_STATUS, null=True)
+    type = models.IntegerField(choices=TYPE_STATUS)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):

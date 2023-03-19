@@ -18,6 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
 class ChoiceQuestionSerializer(serializers.HyperlinkedModelSerializer):
     author = UserSerializer(read_only=True)
     subject_name = serializers.ReadOnlyField(source='get_subject_display')
+    type_name = serializers.ReadOnlyField(source='get_type_display')
 
     class Meta:
         model = ChoiceQuestion
@@ -26,6 +27,7 @@ class ChoiceQuestionSerializer(serializers.HyperlinkedModelSerializer):
 
 class SubjectiveQuestionSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
+    subject_name = serializers.ReadOnlyField(source='get_subject_display')
 
     class Meta:
         model = SubjectiveQuestion

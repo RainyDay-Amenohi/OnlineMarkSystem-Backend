@@ -1,15 +1,19 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from questions import views
+from questions import views as question_view
+from user_info import views as user_view
 
 router = DefaultRouter()
-# router.register(r'singleChoice', views.SingleChoiceViewSet)
-router.register(r'choice-question', views.ChoiceQuestionViewSet)
-router.register(r'user', views.UserViewSet)
-router.register(r'subjective-question', views.SubjectiveQuestionViewSet)
+
+router.register(r'user', user_view.UserViewSet)
+router.register(r'choice', question_view.ChoiceQuestionViewSet)
+router.register(r'blank', question_view.BlankQuestionViewSet)
+router.register(r'subjective', question_view.SubjectiveQuestionViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -17,5 +21,8 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh')
-    # path('questions/', include('questions.urls', namespace='questions')),
 ]
+
+# 注册媒体文件路由
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -5,34 +5,9 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-# 单选题的数据模型
-# class SingleChoice(models.Model):
-#     body = models.TextField()
-#     choices_1 = models.CharField(max_length=200)
-#     choices_2 = models.CharField(max_length=200)
-#     choices_3 = models.CharField(max_length=200)
-#     choices_4 = models.CharField(max_length=200)
-#     right_answer = models.CharField(max_length=1)
-#     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-#
-#     def __str__(self):
-#         return self.body
-#
-#     class Meta:
-#         ordering = ['-id']
-
 
 # 选择题数据模型
 class ChoiceQuestion(models.Model):
-    # class SubjectStatus(models.IntegerChoices):
-    #     CHI = 0, '语文',
-    #     ENG = 1, '英语',
-    #     MAT = 2, '数学',
-
-    # class TypeStatus(models.IntegerChoices):
-    #     SINGLE = 0, '单项选择',
-    #     MULTIPLE = 1, '多项选择'
-
     SUBJECT_STATUS = [
         (0, '语文'),
         (1, '英语'),
@@ -53,7 +28,30 @@ class ChoiceQuestion(models.Model):
     image = models.ImageField(upload_to='img', blank=True, null=True)
     subject = models.IntegerField(choices=SUBJECT_STATUS, null=True)
     type = models.IntegerField(choices=TYPE_STATUS)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='choice')
+
+    def __str__(self):
+        return self.body
+
+    class Meta:
+        ordering = ['-id']
+
+
+# 填空题数据模型
+class BlankQuestion(models.Model):
+    SUBJECT_STATUS = [
+        (0, '语文'),
+        (1, '英语'),
+        (2, '数学'),
+    ]
+    body = models.TextField()
+    blanks_num = models.IntegerField(default=1)
+    correct_answer_1 = models.CharField(max_length=20)
+    correct_answer_2 = models.CharField(max_length=20, null=True)
+    correct_answer_3 = models.CharField(max_length=20, null=True)
+    image = models.ImageField(upload_to='img', blank=True, null=True)
+    subject = models.IntegerField(choices=SUBJECT_STATUS, null=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='blank')
 
     def __str__(self):
         return self.body
@@ -73,7 +71,7 @@ class SubjectiveQuestion(models.Model):
     correct_answer = models.TextField()
     image = models.ImageField(upload_to='img', blank=True, null=True)
     subject = models.IntegerField(choices=SubjectStatus.choices, null=True)
-    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='subjective')
 
     def __str__(self):
         return self.body

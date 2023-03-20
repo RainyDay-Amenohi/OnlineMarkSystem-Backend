@@ -3,13 +3,14 @@ from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django_filters.rest_framework import DjangoFilterBackend
 
-from questions.models import ChoiceQuestion, SubjectiveQuestion
-from questions.serializers import UserSerializer, ChoiceQuestionSerializer, \
-    SubjectiveQuestionSerializer
+from questions.models import ChoiceQuestion, SubjectiveQuestion, BlankQuestion
+from questions.serializers import ChoiceQuestionSerializer, \
+    SubjectiveQuestionSerializer, BlankQuestionSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, generics, viewsets
 from rest_framework.views import APIView
+from questions.permission import IsAdminUserOrReadOnly
 
 
 # Create your views here.
@@ -17,26 +18,23 @@ def index(request):
     return HttpResponse("questions view")
 
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-# class SingleChoiceViewSet(viewsets.ModelViewSet):
-#     queryset = SingleChoice.objects.all()
-#     serializer_class = SingleChoiceSerializer
-#     filter_backends = [DjangoFilterBackend]
-#     filterset_fields = ['author', 'body']
-#
-#     def perform_create(self, serializer):
-#         serializer.save(author=self.request.user)
-
-
 class ChoiceQuestionViewSet(viewsets.ModelViewSet):
     queryset = ChoiceQuestion.objects.all()
     serializer_class = ChoiceQuestionSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['author', 'type']
+    permission_classes = [IsAdminUserOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class BlankQuestionViewSet(viewsets.ModelViewSet):
+    queryset = BlankQuestion.objects.all()
+    serializer_class = BlankQuestionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['author', 'subject']
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -47,6 +45,7 @@ class SubjectiveQuestionViewSet(viewsets.ModelViewSet):
     serializer_class = SubjectiveQuestionSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['author', 'subject']
+    permission_classes = [IsAdminUserOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

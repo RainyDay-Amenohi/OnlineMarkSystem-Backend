@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticated
 
 from questions.models import ChoiceQuestion, SubjectiveQuestion, BlankQuestion
 from questions.serializers import ChoiceQuestionSerializer, \
@@ -23,7 +24,7 @@ class ChoiceQuestionViewSet(viewsets.ModelViewSet):
     serializer_class = ChoiceQuestionSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['author', 'type']
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [IsAdminUserOrReadOnly, IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -34,7 +35,7 @@ class BlankQuestionViewSet(viewsets.ModelViewSet):
     serializer_class = BlankQuestionSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['author', 'subject']
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [IsAdminUserOrReadOnly, IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -45,7 +46,7 @@ class SubjectiveQuestionViewSet(viewsets.ModelViewSet):
     serializer_class = SubjectiveQuestionSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['author', 'subject']
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [IsAdminUserOrReadOnly, IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

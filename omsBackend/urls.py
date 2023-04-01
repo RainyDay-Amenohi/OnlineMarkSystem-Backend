@@ -16,6 +16,7 @@ router.register(r'choice', question_view.ChoiceQuestionViewSet)
 router.register(r'blank', question_view.BlankQuestionViewSet)
 router.register(r'subjective', question_view.SubjectiveQuestionViewSet)
 router.register(r'exam', exam_view.ExamViewSet)
+router.register(r'exam-question', exam_view.ExamQuestionViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

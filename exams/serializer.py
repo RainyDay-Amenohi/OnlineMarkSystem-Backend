@@ -17,6 +17,7 @@ class ExamSerializer(serializers.ModelSerializer):
 
 class ExamQuestionSerializer(serializers.ModelSerializer):
     type_name = serializers.ReadOnlyField(source='get_type_display')
+    exam = serializers.PrimaryKeyRelatedField(queryset=Exam.objects.all())
 
     class Meta:
         model = ExamQuestion

@@ -7,8 +7,8 @@ class ExamSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='exam-detail')
     author = UserDescSerializer(read_only=True)
     subject_name = serializers.ReadOnlyField(source='get_subject_display')
-    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
+    create_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False)
+    update_time = serializers.DateTimeField(format='%Y-%m-%d %H:%M', required=False)
 
     class Meta:
         model = Exam
@@ -16,6 +16,7 @@ class ExamSerializer(serializers.ModelSerializer):
 
 
 class ExamQuestionSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='examquestion-detail')
     type_name = serializers.ReadOnlyField(source='get_type_display')
     exam = serializers.PrimaryKeyRelatedField(queryset=Exam.objects.all())
 

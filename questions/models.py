@@ -12,6 +12,7 @@ class ChoiceQuestion(models.Model):
         (0, '语文'),
         (1, '英语'),
         (2, '数学'),
+        (3, '政治'),
     ]
 
     TYPE_STATUS = [
@@ -43,6 +44,7 @@ class BlankQuestion(models.Model):
         (0, '语文'),
         (1, '英语'),
         (2, '数学'),
+        (3, '政治'),
     ]
     body = models.TextField()
     blanks_num = models.IntegerField(default=1)
@@ -60,17 +62,20 @@ class BlankQuestion(models.Model):
         ordering = ['-id']
 
 
+SUBJECT_STATUS = [
+    (0, '语文'),
+    (1, '英语'),
+    (2, '数学'),
+    (3, '政治'),
+]
+
+
 # 主观题数据模型
 class SubjectiveQuestion(models.Model):
-    class SubjectStatus(models.IntegerChoices):
-        CHI = 0, '语文',
-        ENG = 1, '英语',
-        MAT = 2, '数学',
-
     body = models.TextField()
     correct_answer = models.TextField()
     image = models.ImageField(upload_to='img', blank=True, null=True)
-    subject = models.IntegerField(choices=SubjectStatus.choices, null=True)
+    subject = models.IntegerField(choices=SUBJECT_STATUS, null=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='subjective')
 
     def __str__(self):

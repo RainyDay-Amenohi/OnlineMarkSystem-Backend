@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'questions',
     'user_info',
+    'exams',
 ]
 
 MIDDLEWARE = [
@@ -135,7 +136,7 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:5173',
 )
 
-COrs_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS = True
 
 # rest_framework 配置
 REST_FRAMEWORK = {

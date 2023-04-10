@@ -27,9 +27,13 @@ class AnswerViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['question_id', 'question_type']
+    filterset_fields = ['question_id', 'question_type', 'student', 'exam']
+    permission_classes = [IsAuthenticated]
 
 
 class StudentViewSet(viewsets.ModelViewSet):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['classes']
+    permission_classes = [IsAuthenticated]

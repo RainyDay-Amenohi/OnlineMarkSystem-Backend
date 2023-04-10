@@ -42,6 +42,7 @@ class Answer(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     question_type = models.IntegerField(choices=TYPE_STATUS)
     question_id = models.IntegerField()
+    exam = models.ForeignKey(Exam, on_delete=models.CASCADE)
     context = models.TextField()
     score = models.IntegerField()
 

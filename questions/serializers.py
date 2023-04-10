@@ -18,7 +18,7 @@ class ChoiceQuestionSerializer(serializers.HyperlinkedModelSerializer):
 class BlankQuestionSerializer(serializers.HyperlinkedModelSerializer):
     author = UserDescSerializer(read_only=True)
     subject_name = serializers.ReadOnlyField(source='get_subject_display')
-    type_name = serializers.CharField(default='填空题')
+    type_name = serializers.ReadOnlyField(default='填空题')
     id = serializers.IntegerField(read_only=True)
 
     class Meta:
@@ -29,7 +29,7 @@ class BlankQuestionSerializer(serializers.HyperlinkedModelSerializer):
 class SubjectiveQuestionSerializer(serializers.HyperlinkedModelSerializer):
     author = UserDescSerializer(read_only=True)
     subject_name = serializers.ReadOnlyField(source='get_subject_display')
-    type_name = serializers.CharField(default='主观题')
+    type_name = serializers.ReadOnlyField(default='主观题')
     id = serializers.IntegerField(read_only=True)
 
     class Meta:

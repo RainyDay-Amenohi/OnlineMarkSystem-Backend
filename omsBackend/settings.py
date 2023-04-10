@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'questions',
     'user_info',
     'exams',
+    'mark',
 ]
 
 MIDDLEWARE = [

@@ -25,6 +25,7 @@ class ClassExamSerializer(serializers.ModelSerializer):
 
 class StudentSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='student-detail')
+    scores = serializers.JSONField(required=False)
 
     class Meta:
         model = Student

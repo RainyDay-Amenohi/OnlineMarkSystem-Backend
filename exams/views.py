@@ -23,7 +23,7 @@ class ExamViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    @action(methods=['get'], detail=True, url_path='exam-pdf', url_name='exam_pdf')
+    @action(methods=['get'], detail=True, url_path='exam-pdf')
     def exam_pdf(self, request, pk):
         # 获取题目信息
         exam = Exam.objects.get(pk=pk)

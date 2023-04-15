@@ -36,6 +36,8 @@ class ExamQuestion(models.Model):
     type = models.IntegerField(choices=TYPE_STATUS)
     question_id = models.IntegerField()
     question_url = models.CharField(max_length=200)
+    # 表示该题目在该试卷中的分值
+    score = models.IntegerField()
 
     def __str__(self):
         return self.exam.title + '-' + self.question_url

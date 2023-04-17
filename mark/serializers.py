@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from exams.models import ExamQuestion
 from exams.serializers import ExamSerializer
 from mark.models import Class, ClassExam, Answer, Student
 from questions.models import ChoiceQuestion, BlankQuestion, SubjectiveQuestion
@@ -40,10 +41,12 @@ class AnswerSerializer(serializers.ModelSerializer):
     # score = serializers.SerializerMethodField()
 
     def get_correct(self, obj):
+        # 引入exam-question表
+        full_score = ExamQuestion.objects.get(exam=obj.exam, question_id=obj.question_id).score
         if obj.question_type == 0 or obj.question_type == 1:
             correct = ChoiceQuestion.objects.get(id=obj.question_id).correct_answer
             if correct == obj.context:
-                obj.score = 1
+                obj.score = full_score
             else:
                 obj.score = 0
             return correct

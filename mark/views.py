@@ -25,7 +25,7 @@ class ClassExamViewSet(viewsets.ModelViewSet):
     queryset = ClassExam.objects.all()
     serializer_class = ClassExamSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['classes']
+    filterset_fields = ['classes', 'exam']
     permission_classes = [IsAuthenticated]
 
     # 计算班级成绩分布
@@ -62,6 +62,7 @@ class ClassExamViewSet(viewsets.ModelViewSet):
     def score_rate(self, request, pk):
         class_id = self.queryset.get(pk=pk).classes_id
         exam_id = self.queryset.get(pk=pk).exam_id
+        print(exam_id)
         # 获取所有学生
         students = Student.objects.filter(classes_id=class_id)
         # 获取每一题的得分率
@@ -74,6 +75,8 @@ class ClassExamViewSet(viewsets.ModelViewSet):
             for stu in students:
                 grade = Answer.objects.get(student=stu.id, question_id=q.question_id).score
                 rate = grade / q.score
+                print(grade)
+                print(q.score)
                 rates.append(rate)
             # 求出一道题的平均得分率
             avg_rate = (sum(rates) / len(rates)) * 100

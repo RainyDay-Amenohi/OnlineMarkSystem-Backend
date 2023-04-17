@@ -8,7 +8,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from exams.models import ExamQuestion
+from exams.models import ExamQuestion, Exam
 from mark.models import Class, ClassExam, Answer, Student
 from mark.serializers import ClassSerializer, ClassExamSerializer, AnswerSerializer, StudentSerializer
 
@@ -28,8 +28,37 @@ class ClassExamViewSet(viewsets.ModelViewSet):
     filterset_fields = ['classes']
     permission_classes = [IsAuthenticated]
 
-    @action(methods=['get'], detail=True, url_path='score-rate')
+    # 计算班级成绩分布
+    @action(methods=['get'], detail=True, url_path='class-grade')
+    def class_grade(self, request, pk):
+        grade_list = [{'name': '60以下', 'value': 0}, {'name': '60-70', 'value': 0}, {'name': '70-80', 'value': 0},
+                      {'name': '80-90', 'value': 0}, {'name': '90以上', 'value': 0}]
+        class_id = self.queryset.get(pk=pk).classes_id
+        exam_id = self.queryset.get(pk=pk).exam_id
+        # 获取所有学生
+        students = Student.objects.filter(classes_id=class_id)
+        exam_name = Exam.objects.get(id=exam_id).title
+
+        # 每一个学生的得分
+        for stu in students:
+            for item in stu.scores:
+                if item['title'] == exam_name:
+                    s = item['score']
+                    if s < 60:
+                        grade_list[0]['value'] += 1
+                    elif s < 70:
+                        grade_list[1]['value'] += 1
+                    elif s < 80:
+                        grade_list[2]['value'] += 1
+                    elif s < 90:
+                        grade_list[3]['value'] += 1
+                    else:
+                        grade_list[4]['value'] += 1
+        json_list = json.dumps(grade_list)
+        return Response(json_list)
+
     # 计算得分率
+    @action(methods=['get'], detail=True, url_path='score-rate')
     def score_rate(self, request, pk):
         class_id = self.queryset.get(pk=pk).classes_id
         exam_id = self.queryset.get(pk=pk).exam_id
@@ -47,7 +76,7 @@ class ClassExamViewSet(viewsets.ModelViewSet):
                 rate = grade / q.score
                 rates.append(rate)
             # 求出一道题的平均得分率
-            avg_rate = sum(rates) / len(rates)
+            avg_rate = (sum(rates) / len(rates)) * 100
             general_rate.append(avg_rate)
         # print(general_rate)
         json_list = json.dumps(general_rate)

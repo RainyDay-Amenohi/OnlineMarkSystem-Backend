@@ -16,6 +16,7 @@ class ClassSerializer(serializers.ModelSerializer):
 
 
 class ClassExamSerializer(serializers.ModelSerializer):
+    url = serializers.HyperlinkedIdentityField(view_name='classexam-detail')
     classes = ClassSerializer(read_only=True)
     exam = ExamSerializer(read_only=True)
     rates = serializers.JSONField(required=False)

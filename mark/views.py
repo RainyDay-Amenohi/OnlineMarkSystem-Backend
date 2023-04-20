@@ -68,7 +68,12 @@ class ClassExamViewSet(viewsets.ModelViewSet):
         # 获取每一题的得分率
         # 先拿到单题的分值，用每一个答案的得分除以分值得出得分率，最后将所有得分率求平均
         questions = ExamQuestion.objects.filter(exam=exam_id)
-        general_rate = []
+        general_rate = {
+            'single': [],
+            'multiple': [],
+            'blank': [],
+            'subjective': []
+        }
         for q in questions:
             # rates数组保存一道题目中每一个学生的得分率
             rates = []
@@ -80,7 +85,14 @@ class ClassExamViewSet(viewsets.ModelViewSet):
                 rates.append(rate)
             # 求出一道题的平均得分率
             avg_rate = (sum(rates) / len(rates)) * 100
-            general_rate.append(avg_rate)
+            if q.type == 0:
+                general_rate['single'].append(avg_rate)
+            elif q.type == 1:
+                general_rate['multiple'].append(avg_rate)
+            elif q.type == 2:
+                general_rate['blank'].append(avg_rate)
+            else:
+                general_rate['subjective'].append(avg_rate)
         # print(general_rate)
         json_list = json.dumps(general_rate)
         return Response(json_list)

@@ -44,6 +44,24 @@ class ExamViewSet(viewsets.ModelViewSet):
         url = self.request.build_absolute_uri('/') + pdf.print_exam(exam, singles, multiples, blanks, subjectives)
         return Response(url)
 
+    @action(methods=['post'], detail=True, url_path='set-scores')
+    def set_scores(self, request, pk):
+        scores = request.data
+        print(scores['single'])
+        exam = Exam.objects.get(pk=pk)
+        question_infos = ExamQuestion.objects.filter(exam=exam)
+        for item in question_infos:
+            if item.type == 0:
+                item.score = scores['single']
+            elif item.type == 1:
+                item.score = scores['multiple']
+            elif item.type == 2:
+                item.score = scores['blank']
+            else:
+                item.score = scores['subjective']
+            item.save()
+        return Response('success')
+
 
 class ExamQuestionViewSet(viewsets.ModelViewSet):
     queryset = ExamQuestion.objects.all()

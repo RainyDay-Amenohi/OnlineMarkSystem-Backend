@@ -39,18 +39,13 @@ class AnswerSerializer(serializers.ModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='answer-detail')
     correct = serializers.SerializerMethodField()
     question_body = serializers.SerializerMethodField()
-
-    # score = serializers.SerializerMethodField()
+    score = serializers.IntegerField(required=False)
 
     def get_correct(self, obj):
         # 引入exam-question表
         full_score = ExamQuestion.objects.get(exam=obj.exam, question_id=obj.question_id).score
         if obj.question_type == 0 or obj.question_type == 1:
             correct = ChoiceQuestion.objects.get(id=obj.question_id).correct_answer
-            if correct == obj.context:
-                obj.score = full_score
-            else:
-                obj.score = 0
             return correct
         elif obj.question_type == 2:
             blank = BlankQuestion.objects.get(id=obj.question_id)

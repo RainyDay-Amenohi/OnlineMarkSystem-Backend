@@ -1,6 +1,7 @@
 import json
 
 from django.core import serializers
+from django.db.models import Q
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
@@ -80,11 +81,12 @@ class ClassExamViewSet(viewsets.ModelViewSet):
             for stu in students:
                 grade = Answer.objects.get(student=stu.id, question_id=q.question_id).score
                 rate = grade / q.score
-                print(grade)
-                print(q.score)
                 rates.append(rate)
             # 求出一道题的平均得分率
             avg_rate = (sum(rates) / len(rates)) * 100
+            # print(sum(rates))
+            # print(len(rates))
+            # print('-------------')
             if q.type == 0:
                 general_rate['single'].append(avg_rate)
             elif q.type == 1:
@@ -104,6 +106,20 @@ class AnswerViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['question_id', 'question_type', 'student', 'exam']
     permission_classes = [IsAuthenticated]
+
+    @action(methods=['get'], detail=False, url_path='update-score')
+    def update_score(self, request):
+        choices = self.get_serializer(self.queryset.filter(Q(question_type=0) | Q(question_type=1)), many=True)
+        for choice in choices.data:
+            full_score = ExamQuestion.objects.get(exam=choice['exam'], question_id=choice['question_id']).score
+            if choice['correct'] == choice['context']:
+                choice['score'] = full_score
+            else:
+                choice['score'] = 0
+        serializer = AnswerSerializer(data=choices.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response('serializer finish')
 
 
 class StudentViewSet(viewsets.ModelViewSet):

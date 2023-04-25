@@ -15,6 +15,7 @@ class Student(models.Model):
     name = models.CharField(max_length=200)
     student_id = models.IntegerField()
     classes = models.ForeignKey(Class, on_delete=models.SET_NULL, null=True)
+    scores = models.JSONField(default=list, blank=True)
 
     def __str__(self):
         return self.classes.name + '-' + self.name
